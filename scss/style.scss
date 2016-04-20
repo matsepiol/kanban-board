@@ -1,0 +1,20 @@
+$grey: #d2d2d2;
+
+.kanban-board {
+  display: inline-block;
+  height: 95vh;
+  width: 100%;
+}
+
+section {
+  background-color: $grey;
+  border: 1px solid #000;
+  height: 100%;
+  width: 30%;
+  display: inline-block;
+
+  h2 {
+    text-align: center;
+    border-bottom: 1px solid #000;
+  }
+}

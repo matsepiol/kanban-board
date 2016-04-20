@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Kanban Board</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+    <link rel="stylesheet" href="style.css">
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <script src="system.config.js"></script>
+  </head>
+
+  <body>
+
+    <div class="kanban-board">
+      <section class="to-do">
+        <h2>To Do</h2>
+      </section>
+
+      <section class="in-progress">
+        <h2>In Progress</h2>
+      </section>
+
+      <section class="done">
+        <h2>Done</h2>
+      </section>
+    </div>
+
+    <button class="button" type="button" onclick="addTask();">Add task</button>
+
+  </body>
+
+</html>
