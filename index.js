@@ -11,10 +11,6 @@ var Task = require('./models/tasks');
 mongoose.connect('mongodb://localhost/kanban-board');
 var db = mongoose.connection;
 
-app.get('/', function(req, res) {
-  res.send('Kanban board - express server test');
-});
-
 app.get('/api/tasks', function(req, res) {
   Task.getTasks(function(err, tasks) {
     if (err) {

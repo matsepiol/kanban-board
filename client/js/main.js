@@ -1,4 +1,10 @@
-"use strict";
+'use strict';
 
-var tasks = [];
-alert(2);
+var _api = require('js/api.js');
+
+var tasks = void 0;
+
+(0, _api.getTasks)(function (tasks) {
+  tasks = JSON.parse(tasks);
+  console.log(tasks);
+});
