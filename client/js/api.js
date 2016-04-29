@@ -3,17 +3,60 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var baseDomain = 'http://localhost:3000/';
+exports.getTasks = getTasks;
+exports.getTaskById = getTaskById;
+exports.addTask = addTask;
+exports.editTask = editTask;
+exports.deleteTask = deleteTask;
+var baseDomain = 'http://localhost:3000/',
+    http = new XMLHttpRequest();
 
-function getTasks(callback) {
-  var http = new XMLHttpRequest();
-  http.onreadystatechange = function () {
-    if (http.readyState === 4 && http.status === 200) {
-      callback(http.responseText);
-    }
-  };
-  http.open("GET", baseDomain + 'api/tasks', true);
-  http.send(null);
+var sendRequest = function sendRequest(req, url) {
+  var promise = new Promise(function (resolve, reject) {
+
+    http.onreadystatechange = function () {
+      if (http.readyState === 4 && http.status === 200) {
+        resolve(http.responseText);
+      }
+    };
+    http.open(req, url, true);
+    http.send(null);
+  });
+
+  return promise;
 };
 
-exports.getTasks = getTasks;
+function getTasks(callback) {
+  var url = baseDomain + 'api/tasks';
+  sendRequest('GET', url).then(function (data) {
+    callback(data);
+  });
+};
+
+function getTaskById(taskId, callback) {
+  var url = baseDomain + 'api/tasks/' + taskId;
+  sendRequest('GET', url).then(function (data) {
+    callback(data);
+  });
+};
+
+function addTask(task, callback) {
+  var url = baseDomain + 'api/tasks/';
+  sendRequest('POST', url).then(function (data) {
+    callback(data);
+  });
+};
+
+function editTask(taskId, task, options, callback) {
+  var url = baseDomain + 'api/tasks/' + taskId;
+  sendRequest('PUT', url).then(function (data) {
+    callback(data);
+  });
+};
+
+function deleteTask(taskId, callback) {
+  var url = baseDomain + 'api/tasks/' + taskId;
+  sendRequest('DELETE', url).then(function (data) {
+    callback(data);
+  });
+};
