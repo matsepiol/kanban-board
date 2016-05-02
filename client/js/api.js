@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -11,16 +11,22 @@ exports.deleteTask = deleteTask;
 var baseDomain = 'http://localhost:3000/',
     http = new XMLHttpRequest();
 
-var sendRequest = function sendRequest(req, url) {
+var sendRequest = function sendRequest(req, url, params) {
   var promise = new Promise(function (resolve, reject) {
+
+    if (params) {
+      params = JSON.stringify(params);
+    }
 
     http.onreadystatechange = function () {
       if (http.readyState === 4 && http.status === 200) {
         resolve(http.responseText);
       }
     };
+
     http.open(req, url, true);
-    http.send(null);
+    http.setRequestHeader("Content-type", "application/json");
+    http.send(params);
   });
 
   return promise;
@@ -41,8 +47,8 @@ function getTaskById(taskId, callback) {
 };
 
 function addTask(task, callback) {
-  var url = baseDomain + 'api/tasks/';
-  sendRequest('POST', url).then(function (data) {
+  var url = baseDomain + 'api/tasks';
+  sendRequest('POST', url, task).then(function (data) {
     callback(data);
   });
 };

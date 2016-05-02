@@ -27,9 +27,44 @@
       </section>
     </div>
 
-    <button class="button" type="button" onclick="addTask();">Add task</button>
+    <div class='button-wrapper'>
+      <button class="button" type="button" onclick="toggleDialog();">Add task</button>
+    </div>
 
-    <div id="hehe"></div>
+    <div class="add-task-dialog hidden">
+      <h2>Add New Task</h2>
+      <div class='new-task-options'>
+        <div class='properties'>
+          <span class="name-input">
+            Name:
+            <input type="text" name="name"></input>
+          </span>
+          <span class="author-input">
+            Author:
+            <input type="text" name="author"></input>
+          </span>
+          <span class="description-input">
+            Description:
+            <input type="text" name="description"></input>
+          </span>
+        </div>
+
+        <form class="task-type-form">
+          Type:
+          <input id="to-do" type="radio" name="task-type" value="to-do" checked>
+          <label for="to-do"><span><span></span></span>To Do</label>
+          <input id="in-progress" type="radio" name="task-type" value="in-progress">
+          <label for="in-progress"><span><span></span></span>In Progress</label>
+          <input id="done" type="radio" name="task-type" value="done">
+          <label for="done"><span><span></span></span>Done</label>
+        </form>
+
+      </div>
+
+      <button class="cancel-button" type="button" onclick="toggleDialog();">Cancel</button>
+      <button class="submit-button" type="button" onclick="getNewTaskOptions();">Submit</button>
+
+    </div>
 
   </body>
 

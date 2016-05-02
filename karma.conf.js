@@ -16,7 +16,7 @@ module.exports = function(config) {
       transform: ['babelify']
     },
     reporters: ['progress'],
-    browsers: ['Firefox', 'Chrome'],
+    browsers: ['Firefox'],
     colors: true,
     autoWatch: true,
     singleRun: false

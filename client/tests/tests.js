@@ -34,6 +34,18 @@ describe('Unit tests:', () => {
 
     let result = Main.fetchTask(correctTask);
     expect(result).toBe('Everything went fine!');
+  });
+
+  it('Test if adding tasks works fine', () => {
+    let task = {
+      name: 'correct test',
+      author: 'Mateusz Sepiol',
+      type: 'to-do',
+      description: 'test decs'
+    };
+
+    let result = Main.addTask(task);
+    expect(result).toBe('Task succesfully added.');
 
   });
 

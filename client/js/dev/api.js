@@ -1,16 +1,22 @@
 let baseDomain = 'http://localhost:3000/',
     http = new XMLHttpRequest();
 
-let sendRequest = function(req, url) {
+let sendRequest = function(req, url, params) {
   let promise = new Promise(function(resolve, reject) {
+
+    if (params) {
+      params = JSON.stringify(params);
+    }
 
     http.onreadystatechange = () => {
       if (http.readyState === 4 && http.status === 200) {
         resolve(http.responseText);
       }
     }
+
     http.open(req, url, true);
-    http.send(null);
+    http.setRequestHeader("Content-type", "application/json");
+    http.send(params);
   });
 
   return promise;
@@ -31,8 +37,8 @@ export function getTaskById(taskId, callback) {
 };
 
 export function addTask(task, callback) {
-  let url = baseDomain + 'api/tasks/';
-  sendRequest('POST', url).then(function(data) {
+  let url = baseDomain + 'api/tasks';
+  sendRequest('POST', url, task).then(function(data) {
     callback(data);
   });
 };

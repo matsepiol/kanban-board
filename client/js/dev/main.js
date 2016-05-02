@@ -2,9 +2,8 @@ import * as Api from './api.js';
 let tasks;
 let taskTpl;
 
-
 getTemplate().then(function(data) { //get hbs template
-  taskTpl = data;
+  taskTpl = Handlebars.compile(data);
   getTasks().then(function(tasks) { //get tasks from API
     for (let i = 0 ; i < tasks.length ; i++) {
       fetchTask(tasks[i]);
@@ -50,8 +49,60 @@ function fetchTask(task) {
     return errMsg;
   }
   else {
+    let taskType = document.getElementsByClassName(task.type)[0];
+    //let taskHtml = taskTpl(task);
+    //console.log(taskHtml);
     return okMsg;
   }
 };
 
-export {Api, fetchTask};
+function addTask(options) {
+  let promise = new Promise(function(resolve, reject) {
+    Api.addTask(options, (task) => {
+      toggleDialog();
+      return "Task succesfully added."
+    });
+  });
+};
+
+window.toggleDialog = () => {
+ let dialog = document.getElementsByClassName('add-task-dialog')[0];
+
+ if (dialog.classList.contains('hidden')) {
+    dialog.classList.remove('hidden');
+ }
+ else {
+    dialog.classList.add('hidden');
+    let inputs = document.getElementsByClassName('properties')[0].getElementsByTagName('input');
+
+    for (let i = 0 ; i < inputs.length ; i++) {
+      inputs[i].value = "";
+    }
+  }
+};
+
+window.getNewTaskOptions = () => {
+  let taskName = document.getElementsByClassName('name-input')[0].getElementsByTagName('input')[0].value,
+      taskAuthor = document.getElementsByClassName('author-input')[0].getElementsByTagName('input')[0].value,
+      taskDesc = document.getElementsByClassName('description-input')[0].getElementsByTagName('input')[0].value,
+      taskType;
+
+  let typeCheckbox = document.getElementsByClassName('task-type-form')[0].getElementsByTagName('input');
+  for (let i = 0 ; i < typeCheckbox.length ; i++) {
+    if (typeCheckbox[i].checked) {
+      taskType = typeCheckbox[i].value;
+    }
+  }
+
+  let taskObject = {
+    name: taskName,
+    author: taskAuthor,
+    type: taskType,
+    description: taskDesc
+  };
+
+  addTask(taskObject);
+
+};
+
+export {Api, fetchTask, addTask};
