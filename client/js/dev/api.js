@@ -1,8 +1,8 @@
 let baseDomain = 'http://localhost:3000/',
     http = new XMLHttpRequest();
 
-let sendRequest = function(req, url, params) {
-  let promise = new Promise(function(resolve, reject) {
+let sendRequest = (req, url, params) => {
+  let promise = new Promise( (resolve, reject) => {
 
     if (params) {
       params = JSON.stringify(params);
@@ -24,35 +24,35 @@ let sendRequest = function(req, url, params) {
 
 export function getTasks(callback) {
   let url = baseDomain + 'api/tasks';
-  sendRequest('GET', url).then(function(data) {
+  sendRequest('GET', url).then( (data) => {
     callback(data);
   });
 };
 
 export function getTaskById(taskId, callback) {
   let url = baseDomain + 'api/tasks/' + taskId;
-  sendRequest('GET', url).then(function(data) {
+  sendRequest('GET', url).then( (data) => {
     callback(data);
   });
 };
 
 export function addTask(task, callback) {
   let url = baseDomain + 'api/tasks';
-  sendRequest('POST', url, task).then(function(data) {
+  sendRequest('POST', url, task).then( (data) => {
     callback(data);
   });
 };
 
 export function editTask(taskId, task, options, callback) {
   let url = baseDomain + 'api/tasks/' + taskId;
-  sendRequest('PUT', url).then(function(data) {
+  sendRequest('PUT', url).then( (data) => {
     callback(data);
   });
 };
 
 export function deleteTask(taskId, callback) {
   let url = baseDomain + 'api/tasks/' + taskId;
-  sendRequest('DELETE', url).then(function(data) {
+  sendRequest('DELETE', url).then( (data) => {
     callback(data);
   });
 };

@@ -44,7 +44,6 @@ function fetchTask(task) {
   let typeSection = document.getElementsByClassName(task.type)[0],
       errMsg = 'Required fields are missing.',
       okMsg = 'Everything went fine!';
-    console.log(task);
 
   if (!task.name || !task.author || !task.type) {
     return errMsg;
@@ -54,6 +53,7 @@ function fetchTask(task) {
     let taskHtml = taskTpl(task),
         currentTask = document.createElement('div');
     
+    currentTask.setAttribute('data-taskid', task._id);
     currentTask.classList.add('task');
     currentTask.innerHTML = taskHtml;
     typeSection.appendChild(currentTask);
@@ -108,6 +108,18 @@ window.getNewTaskOptions = () => {
   };
 
   addTask(taskObject);
+};
+
+window.deleteTask = (obj) => {
+  let taskEl = obj.parentElement,
+      taskId = taskEl.getAttribute('data-taskid');
+
+  let promise = new Promise( (resolve, reject) => {
+    Api.deleteTask(taskId, (task) => {
+      taskEl.parentElement.removeChild(taskEl);  
+      return "Task succesfully deleted."
+    });
+  });
 };
 
 export {Api, fetchTask, addTask};

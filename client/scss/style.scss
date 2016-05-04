@@ -1,5 +1,19 @@
+@import "/scss/fontello.css";
+
 $grey: #d2e4d2;
 $blue: #007da1;
+
+@font-face {
+  font-family: "fontello";
+  src: url("/font/fontello.eot?78424500");
+  src: url("/font/fontello.eot?78424500#iefix") format("embedded-opentype"),
+       url("/font/fontello.woff2?78424500") format("woff2"),
+       url("/font/fontello.woff?78424500") format("woff"),
+       url("/font/fontello.ttf?78424500") format("truetype"),
+       url("/font/fontello.svg?78424500#fontello") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
 
 .kanban-board {
   display: inline-block;
@@ -13,6 +27,27 @@ $blue: #007da1;
     width: 30%;
     float: left;
     margin: 0 10px;
+
+    .task {
+      position: relative;
+      border: 1px solid #000;
+      overflow: auto;
+      width: 145px;
+      float: left;
+      margin: 10px;
+      padding: 10px;
+
+      .task-info {
+        float: left;
+        width: 100%;
+      }
+
+      .icon-cancel {
+        cursor: pointer;
+        float: right;
+      }
+    }
+
     h2 {
       text-align: center;
       border-bottom: 1px solid #000;
@@ -80,20 +115,5 @@ $blue: #007da1;
 
   .submit-button {
     float: right;
-  }
-}
-
-.task {
-  position: relative;
-  border: 1px solid #000;
-  overflow: auto;
-  width: 145px;
-  float: left;
-  margin: 10px;
-  padding: 10px;
-  
-  span {
-    float: left;
-    width: 100%
   }
 }

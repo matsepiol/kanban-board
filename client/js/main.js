@@ -59,7 +59,6 @@ function fetchTask(task) {
   var typeSection = document.getElementsByClassName(task.type)[0],
       errMsg = 'Required fields are missing.',
       okMsg = 'Everything went fine!';
-  console.log(task);
 
   if (!task.name || !task.author || !task.type) {
     return errMsg;
@@ -68,6 +67,7 @@ function fetchTask(task) {
     var taskHtml = taskTpl(task),
         currentTask = document.createElement('div');
 
+    currentTask.setAttribute('data-taskid', task._id);
     currentTask.classList.add('task');
     currentTask.innerHTML = taskHtml;
     typeSection.appendChild(currentTask);
@@ -121,6 +121,18 @@ window.getNewTaskOptions = function () {
   };
 
   addTask(taskObject);
+};
+
+window.deleteTask = function (obj) {
+  var taskEl = obj.parentElement,
+      taskId = taskEl.getAttribute('data-taskid');
+
+  var promise = new Promise(function (resolve, reject) {
+    Api.deleteTask(taskId, function (task) {
+      taskEl.parentElement.removeChild(taskEl);
+      return "Task succesfully deleted.";
+    });
+  });
 };
 
 exports.Api = Api;
