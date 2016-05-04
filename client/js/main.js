@@ -11,8 +11,8 @@ var Api = _interopRequireWildcard(_api);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-var tasks = void 0;
-var taskTpl = void 0;
+var tasks = void 0,
+    taskTpl = void 0;
 
 getTemplate().then(function (data) {
   //get hbs template
@@ -56,15 +56,21 @@ function getTemplate() {
 };
 
 function fetchTask(task) {
-  var errMsg = 'Required fields are missing.',
+  var typeSection = document.getElementsByClassName(task.type)[0],
+      errMsg = 'Required fields are missing.',
       okMsg = 'Everything went fine!';
+  console.log(task);
 
   if (!task.name || !task.author || !task.type) {
     return errMsg;
   } else {
-    var taskType = document.getElementsByClassName(task.type)[0];
-    //let taskHtml = taskTpl(task);
-    //console.log(taskHtml);
+    if (!typeSection) return;
+    var taskHtml = taskTpl(task),
+        currentTask = document.createElement('div');
+
+    currentTask.classList.add('task');
+    currentTask.innerHTML = taskHtml;
+    typeSection.appendChild(currentTask);
     return okMsg;
   }
 };
@@ -73,19 +79,20 @@ function addTask(options) {
   var promise = new Promise(function (resolve, reject) {
     Api.addTask(options, function (task) {
       toggleDialog();
+      fetchTask(JSON.parse(task));
       return "Task succesfully added.";
     });
   });
 };
 
 window.toggleDialog = function () {
-  var dialog = document.getElementsByClassName('add-task-dialog')[0];
+  var dialog = document.getElementsByClassName('add-task-dialog')[0],
+      inputs = document.getElementsByClassName('properties')[0].getElementsByTagName('input');
 
   if (dialog.classList.contains('hidden')) {
     dialog.classList.remove('hidden');
   } else {
     dialog.classList.add('hidden');
-    var inputs = document.getElementsByClassName('properties')[0].getElementsByTagName('input');
 
     for (var i = 0; i < inputs.length; i++) {
       inputs[i].value = "";
@@ -97,9 +104,9 @@ window.getNewTaskOptions = function () {
   var taskName = document.getElementsByClassName('name-input')[0].getElementsByTagName('input')[0].value,
       taskAuthor = document.getElementsByClassName('author-input')[0].getElementsByTagName('input')[0].value,
       taskDesc = document.getElementsByClassName('description-input')[0].getElementsByTagName('input')[0].value,
+      typeCheckbox = document.getElementsByClassName('task-type-form')[0].getElementsByTagName('input'),
       taskType = void 0;
 
-  var typeCheckbox = document.getElementsByClassName('task-type-form')[0].getElementsByTagName('input');
   for (var i = 0; i < typeCheckbox.length; i++) {
     if (typeCheckbox[i].checked) {
       taskType = typeCheckbox[i].value;

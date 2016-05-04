@@ -46,7 +46,6 @@ describe('Unit tests:', () => {
 
     let result = Main.addTask(task);
     expect(result).toBe('Task succesfully added.');
-
   });
 
 });
