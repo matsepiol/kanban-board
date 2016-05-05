@@ -1,11 +1,10 @@
 import * as Main from '../js/main.js';
 
 describe('Unit tests:', () => {
-  let tasks = {};
-  let hehe;
+  let tasks = {},
+      hehe;
 
   beforeEach( () => {
-
   });
 
   it('Testing if tests works', () => {
@@ -32,11 +31,12 @@ describe('Unit tests:', () => {
       description: 'test decs'
     };
 
+    spyOn(Main, 'fetchTask').and.returnValue('Everything is fine');
     let result = Main.fetchTask(correctTask);
-    expect(result).toBe('Everything went fine!');
+    expect(result).toBe('Everything is fine');
   });
 
-  it('Test if adding tasks works fine', () => {
+  it('Test if toggling dialog works after adding task', () => {
     let task = {
       name: 'correct test',
       author: 'Mateusz Sepiol',
@@ -44,8 +44,22 @@ describe('Unit tests:', () => {
       description: 'test decs'
     };
 
-    let result = Main.addTask(task);
-    expect(result).toBe('Task succesfully added.');
+    spyOn(window, 'toggleDialog');
+    Main.addTask(task);
+    expect(window.toggleDialog).toHaveBeenCalled();
+  });
+
+  it('Test if toggling dialog works after editing task', () => {
+    let task = {
+      name: 'correct test',
+      author: 'Mateusz Sepiol',
+      type: 'to-do',
+      description: 'test decs'
+    };
+
+    spyOn(window, 'toggleDialog');
+    Main.editTask(task);
+    expect(window.toggleDialog).toHaveBeenCalled();
   });
 
 });

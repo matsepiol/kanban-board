@@ -1,4 +1,5 @@
 <span class="icon-cancel" onclick="deleteTask(this);"></span>
-<span class="task-info task-name">Name: {{name}}</span>
-<span class="task-info task-author">Author: {{author}}</span>
-<span class="task-info task-desc">Description: {{description}}</span>
+<span class="task-info">Name: <span class="task-name">{{name}}</span></span>
+<span class="task-info">Author: <span class="task-author">{{author}}</span></span>
+<span class="task-info">Description: <span class="task-desc">{{description}}</span></span>
+<button class="edit-task" onclick="showEditDialog(this);">Edit Task</button>

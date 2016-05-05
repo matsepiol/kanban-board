@@ -15,7 +15,7 @@ let sendRequest = (req, url, params) => {
     }
 
     http.open(req, url, true);
-    http.setRequestHeader("Content-type", "application/json");
+    http.setRequestHeader('Content-type', 'application/json');
     http.send(params);
   });
 
@@ -45,7 +45,7 @@ export function addTask(task, callback) {
 
 export function editTask(taskId, task, options, callback) {
   let url = baseDomain + 'api/tasks/' + taskId;
-  sendRequest('PUT', url).then( (data) => {
+  sendRequest('PUT', url, task).then( (data) => {
     callback(data);
   });
 };

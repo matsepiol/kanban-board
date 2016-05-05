@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -25,7 +25,7 @@ var sendRequest = function sendRequest(req, url, params) {
     };
 
     http.open(req, url, true);
-    http.setRequestHeader("Content-type", "application/json");
+    http.setRequestHeader('Content-type', 'application/json');
     http.send(params);
   });
 
@@ -55,7 +55,7 @@ function addTask(task, callback) {
 
 function editTask(taskId, task, options, callback) {
   var url = baseDomain + 'api/tasks/' + taskId;
-  sendRequest('PUT', url).then(function (data) {
+  sendRequest('PUT', url, task).then(function (data) {
     callback(data);
   });
 };
