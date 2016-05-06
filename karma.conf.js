@@ -3,18 +3,19 @@ module.exports = function(config) {
 
   config.set({
     basePath: '',
-    frameworks: ['browserify', 'jasmine'],
+    frameworks: ['jasmine'],
     files: [
-      { pattern: 'client/js/main.js', included: false },
-      { pattern: 'client/tests/tests.js', included: true}
+      { pattern: 'client/build/main.js', included: false },
+      { pattern: 'client/build/tests.js', included: true}
     ],
-    preprocessors: {
+/*    preprocessors: {
       'client/tests/tests.js': ['browserify']
-    },
-    browserify: {
+    },*/
+/*    browserify: {
       debug: true,
-      transform: ['babelify']
-    },
+      transform: [
+        ["babelify", { "presets": ["es2015"] }]]
+    },*/
     reporters: ['progress'],
     browsers: ['Firefox'],
     colors: true,

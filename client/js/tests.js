@@ -1,4 +1,4 @@
-import * as Main from '../js/main.js';
+import * as Main from 'main';
 
 describe('Unit tests:', () => {
   let tasks = {},

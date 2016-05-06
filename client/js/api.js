@@ -1,28 +1,18 @@
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.getTasks = getTasks;
-exports.getTaskById = getTaskById;
-exports.addTask = addTask;
-exports.editTask = editTask;
-exports.deleteTask = deleteTask;
-var baseDomain = 'http://localhost:3000/',
+let baseDomain = 'http://localhost:3000/',
     http = new XMLHttpRequest();
 
-var sendRequest = function sendRequest(req, url, params) {
-  var promise = new Promise(function (resolve, reject) {
+let sendRequest = (req, url, params) => {
+  let promise = new Promise( (resolve, reject) => {
 
     if (params) {
       params = JSON.stringify(params);
     }
 
-    http.onreadystatechange = function () {
+    http.onreadystatechange = () => {
       if (http.readyState === 4 && http.status === 200) {
         resolve(http.responseText);
       }
-    };
+    }
 
     http.open(req, url, true);
     http.setRequestHeader('Content-type', 'application/json');
@@ -32,37 +22,37 @@ var sendRequest = function sendRequest(req, url, params) {
   return promise;
 };
 
-function getTasks(callback) {
-  var url = baseDomain + 'api/tasks';
-  sendRequest('GET', url).then(function (data) {
+export function getTasks(callback) {
+  let url = baseDomain + 'api/tasks';
+  sendRequest('GET', url).then( (data) => {
     callback(data);
   });
 };
 
-function getTaskById(taskId, callback) {
-  var url = baseDomain + 'api/tasks/' + taskId;
-  sendRequest('GET', url).then(function (data) {
+export function getTaskById(taskId, callback) {
+  let url = baseDomain + 'api/tasks/' + taskId;
+  sendRequest('GET', url).then( (data) => {
     callback(data);
   });
 };
 
-function addTask(task, callback) {
-  var url = baseDomain + 'api/tasks';
-  sendRequest('POST', url, task).then(function (data) {
+export function addTask(task, callback) {
+  let url = baseDomain + 'api/tasks';
+  sendRequest('POST', url, task).then( (data) => {
     callback(data);
   });
 };
 
-function editTask(taskId, task, options, callback) {
-  var url = baseDomain + 'api/tasks/' + taskId;
-  sendRequest('PUT', url, task).then(function (data) {
+export function editTask(taskId, task, options, callback) {
+  let url = baseDomain + 'api/tasks/' + taskId;
+  sendRequest('PUT', url, task).then( (data) => {
     callback(data);
   });
 };
 
-function deleteTask(taskId, callback) {
-  var url = baseDomain + 'api/tasks/' + taskId;
-  sendRequest('DELETE', url).then(function (data) {
+export function deleteTask(taskId, callback) {
+  let url = baseDomain + 'api/tasks/' + taskId;
+  sendRequest('DELETE', url).then( (data) => {
     callback(data);
   });
 };
