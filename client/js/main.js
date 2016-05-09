@@ -1,5 +1,5 @@
 'use strict';
-import * as Api from 'api';
+import * as Api from './api';
 
 let tasks, taskTpl,
     isEditing = false,
@@ -196,4 +196,4 @@ window.showEditDialog = (obj) => {
   toggleDialog(taskObj);
 };
 
-export {Api, fetchTask, addTask, toggleDialog, editTask};
+export {fetchTask, addTask, toggleDialog, editTask};

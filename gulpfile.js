@@ -16,7 +16,7 @@ var builderConfig = {
   src: 'client/js/*.js',
   systemBuild: 'client/build',
   bundleName: 'main',
-  babel: {modules: 'system'},   // use SystemJS as module builder in 6to5
+//  babel: {modules: 'system'},
   bundleBuild: 'client/dist/app.js'
 };
 
@@ -42,10 +42,6 @@ gulp.task('bundle', () => {
   });
 });
 
-gulp.task('run', (callback) => {
-  runSequence('build', ['bundle'], 'sass', 'start', 'test', callback);
-});
-
 gulp.task('start', function() {
   nodemon({
       script: 'index.js',
@@ -66,8 +62,13 @@ gulp.task('sass', () => {
 
 gulp.task('test', (done) => {
   new Server({
-    configFile: __dirname + '/karma.conf.js'
+    configFile: __dirname + '/client/karma.conf.js'
   }, done).start();
+});
+
+
+gulp.task('run', (callback) => {
+  runSequence('build', ['bundle'], 'sass', 'start', 'test', callback);
 });
 
 gulp.task('watch', function() {

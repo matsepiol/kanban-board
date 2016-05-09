@@ -362,82 +362,97 @@
 
 
 
-System.register("api", [], function(_export) {
-  var baseDomain,
-      http,
-      sendRequest;
-  _export("getTasks", getTasks);
-  _export("getTaskById", getTaskById);
-  _export("addTask", addTask);
-  _export("editTask", editTask);
-  _export("deleteTask", deleteTask);
+System.register("api", [], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  "use strict";
+  exports.getTasks = getTasks;
+  exports.getTaskById = getTaskById;
+  exports.addTask = addTask;
+  exports.editTask = editTask;
+  exports.deleteTask = deleteTask;
+  Object.defineProperty(exports, "__esModule", {value: true});
+  var baseDomain = "http://localhost:3000/",
+      http = new XMLHttpRequest();
+  var sendRequest = function(req, url, params) {
+    var promise = new Promise(function(resolve, reject) {
+      if (params) {
+        params = JSON.stringify(params);
+      }
+      http.onreadystatechange = function() {
+        if (http.readyState === 4 && http.status === 200) {
+          resolve(http.responseText);
+        }
+      };
+      http.open(req, url, true);
+      http.setRequestHeader("Content-type", "application/json");
+      http.send(params);
+    });
+    return promise;
+  };
   function getTasks(callback) {
     var url = baseDomain + "api/tasks";
     sendRequest("GET", url).then(function(data) {
       callback(data);
     });
   }
+  ;
   function getTaskById(taskId, callback) {
     var url = baseDomain + "api/tasks/" + taskId;
     sendRequest("GET", url).then(function(data) {
       callback(data);
     });
   }
+  ;
   function addTask(task, callback) {
     var url = baseDomain + "api/tasks";
     sendRequest("POST", url, task).then(function(data) {
       callback(data);
     });
   }
+  ;
   function editTask(taskId, task, options, callback) {
     var url = baseDomain + "api/tasks/" + taskId;
     sendRequest("PUT", url, task).then(function(data) {
       callback(data);
     });
   }
+  ;
   function deleteTask(taskId, callback) {
     var url = baseDomain + "api/tasks/" + taskId;
     sendRequest("DELETE", url).then(function(data) {
       callback(data);
     });
   }
-  return {
-    setters: [],
-    execute: function() {
-      "use strict";
-      baseDomain = "http://localhost:3000/";
-      http = new XMLHttpRequest();
-      sendRequest = function(req, url, params) {
-        var promise = new Promise(function(resolve, reject) {
-          if (params) {
-            params = JSON.stringify(params);
-          }
-          http.onreadystatechange = function() {
-            if (http.readyState === 4 && http.status === 200) {
-              resolve(http.responseText);
-            }
-          };
-          http.open(req, url, true);
-          http.setRequestHeader("Content-type", "application/json");
-          http.send(params);
-        });
-        return promise;
-      };
-      ;
-      ;
-      ;
-      ;
-      ;
-    }
-  };
+  ;
+  global.define = __define;
+  return module.exports;
 });
 
-System.register("main", ["api"], function(_export) {
-  var Api,
-      tasks,
-      taskTpl,
-      isEditing,
-      taskId;
+System.register("main", ["api"], true, function(require, exports, module) {
+  var global = System.global,
+      __define = global.define;
+  global.define = undefined;
+  "use strict";
+  var _interopRequireWildcard = function(obj) {
+    return obj && obj.__esModule ? obj : {"default": obj};
+  };
+  Object.defineProperty(exports, "__esModule", {value: true});
+  "use strict";
+  var Api = _interopRequireWildcard(require("api"));
+  var tasks = undefined,
+      taskTpl = undefined,
+      isEditing = false,
+      taskId = undefined;
+  getTemplate().then(function(data) {
+    taskTpl = Handlebars.compile(data);
+    getTasks().then(function(tasks) {
+      for (var i = 0; i < tasks.length; i++) {
+        fetchTask(tasks[i]);
+      }
+    });
+  });
   function getTasks() {
     var promise = new Promise(function(resolve, reject) {
       Api.getTasks(function(tasks) {
@@ -511,106 +526,87 @@ System.register("main", ["api"], function(_export) {
       taskEl.getElementsByClassName("task-desc")[0].textContent = task.description;
     }
   }
-  return {
-    setters: [function(_api) {
-      Api = _api;
-    }],
-    execute: function() {
-      "use strict";
-      tasks = undefined;
-      taskTpl = undefined;
-      isEditing = false;
-      taskId = undefined;
-      getTemplate().then(function(data) {
-        taskTpl = Handlebars.compile(data);
-        getTasks().then(function(tasks) {
-          for (var i = 0; i < tasks.length; i++) {
-            fetchTask(tasks[i]);
-          }
-        });
-      });
-      window.toggleDialog = function(taskObj) {
-        var dialog = document.getElementsByClassName("add-task-dialog")[0],
-            inputs = document.getElementsByClassName("properties")[0].getElementsByTagName("input"),
-            editTitle = "Edit Task",
-            addTaskTitle = "Add New Task";
-        if (dialog.classList.contains("hidden")) {
-          dialog.classList.remove("hidden");
-        } else {
-          dialog.classList.add("hidden");
-          for (var i = 0; i < inputs.length; i++) {
-            inputs[i].value = "";
-          }
-        }
-        var titleEl = document.getElementsByClassName("add-task-dialog")[0].getElementsByTagName("h2")[0];
-        if (taskObj) {
-          var taskName = taskObj.taskName;
-          var taskAuthor = taskObj.taskAuthor;
-          var taskDesc = taskObj.taskDesc;
-          var taskType = taskObj.taskType;
-          document.getElementsByClassName("name-input")[0].getElementsByTagName("input")[0].value = taskName;
-          document.getElementsByClassName("author-input")[0].getElementsByTagName("input")[0].value = taskAuthor;
-          document.getElementsByClassName("description-input")[0].getElementsByTagName("input")[0].value = taskDesc;
-          document.getElementById(taskType).checked = true;
-          titleEl.innerHTML = editTitle;
-        } else {
-          titleEl.innerHTML = addTaskTitle;
-        }
-      };
-      window.getNewTaskOptions = function() {
-        var taskName = document.getElementsByClassName("name-input")[0].getElementsByTagName("input")[0].value,
-            taskAuthor = document.getElementsByClassName("author-input")[0].getElementsByTagName("input")[0].value,
-            taskDesc = document.getElementsByClassName("description-input")[0].getElementsByTagName("input")[0].value,
-            typeCheckbox = document.getElementsByClassName("task-type-form")[0].getElementsByTagName("input"),
-            taskType = undefined;
-        for (var i = 0; i < typeCheckbox.length; i++) {
-          if (typeCheckbox[i].checked) {
-            taskType = typeCheckbox[i].value;
-          }
-        }
-        if (!taskName || !taskAuthor || !taskDesc)
-          return;
-        var taskObject = {
-          name: taskName,
-          author: taskAuthor,
-          type: taskType,
-          description: taskDesc
-        };
-        if (isEditing) {
-          editTask(taskId, taskObject);
-        } else {
-          addTask(taskObject);
-        }
-      };
-      window.deleteTask = function(obj) {
-        var taskEl = obj.parentElement,
-            taskId = taskEl.getAttribute("data-taskid");
-        var promise = new Promise(function(resolve, reject) {
-          Api.deleteTask(taskId, function(task) {
-            taskEl.parentElement.removeChild(taskEl);
-            return "Task succesfully deleted.";
-          });
-        });
-      };
-      window.showEditDialog = function(obj) {
-        var taskEl = obj.parentElement,
-            taskObj = {
-              taskName: taskEl.getElementsByClassName("task-name")[0].textContent,
-              taskAuthor: taskEl.getElementsByClassName("task-author")[0].textContent,
-              taskDesc: taskEl.getElementsByClassName("task-desc")[0].textContent,
-              taskType: taskEl.closest(".board").classList[1]
-            };
-        taskId = taskEl.getAttribute("data-taskid");
-        isEditing = true;
-        toggleDialog(taskObj);
-      };
-      _export("Api", Api);
-      _export("fetchTask", fetchTask);
-      _export("addTask", addTask);
-      _export("toggleDialog", toggleDialog);
-      _export("editTask", editTask);
+  window.toggleDialog = function(taskObj) {
+    var dialog = document.getElementsByClassName("add-task-dialog")[0],
+        inputs = document.getElementsByClassName("properties")[0].getElementsByTagName("input"),
+        editTitle = "Edit Task",
+        addTaskTitle = "Add New Task";
+    if (dialog.classList.contains("hidden")) {
+      dialog.classList.remove("hidden");
+    } else {
+      dialog.classList.add("hidden");
+      for (var i = 0; i < inputs.length; i++) {
+        inputs[i].value = "";
+      }
+    }
+    var titleEl = document.getElementsByClassName("add-task-dialog")[0].getElementsByTagName("h2")[0];
+    if (taskObj) {
+      var taskName = taskObj.taskName;
+      var taskAuthor = taskObj.taskAuthor;
+      var taskDesc = taskObj.taskDesc;
+      var taskType = taskObj.taskType;
+      document.getElementsByClassName("name-input")[0].getElementsByTagName("input")[0].value = taskName;
+      document.getElementsByClassName("author-input")[0].getElementsByTagName("input")[0].value = taskAuthor;
+      document.getElementsByClassName("description-input")[0].getElementsByTagName("input")[0].value = taskDesc;
+      document.getElementById(taskType).checked = true;
+      titleEl.innerHTML = editTitle;
+    } else {
+      titleEl.innerHTML = addTaskTitle;
     }
   };
+  window.getNewTaskOptions = function() {
+    var taskName = document.getElementsByClassName("name-input")[0].getElementsByTagName("input")[0].value,
+        taskAuthor = document.getElementsByClassName("author-input")[0].getElementsByTagName("input")[0].value,
+        taskDesc = document.getElementsByClassName("description-input")[0].getElementsByTagName("input")[0].value,
+        typeCheckbox = document.getElementsByClassName("task-type-form")[0].getElementsByTagName("input"),
+        taskType = undefined;
+    for (var i = 0; i < typeCheckbox.length; i++) {
+      if (typeCheckbox[i].checked) {
+        taskType = typeCheckbox[i].value;
+      }
+    }
+    if (!taskName || !taskAuthor || !taskDesc)
+      return;
+    var taskObject = {
+      name: taskName,
+      author: taskAuthor,
+      type: taskType,
+      description: taskDesc
+    };
+    if (isEditing) {
+      editTask(taskId, taskObject);
+    } else {
+      addTask(taskObject);
+    }
+  };
+  window.deleteTask = function(obj) {
+    var taskEl = obj.parentElement,
+        taskId = taskEl.getAttribute("data-taskid");
+    var promise = new Promise(function(resolve, reject) {
+      Api.deleteTask(taskId, function(task) {
+        taskEl.parentElement.removeChild(taskEl);
+        return "Task succesfully deleted.";
+      });
+    });
+  };
+  window.showEditDialog = function(obj) {
+    var taskEl = obj.parentElement,
+        taskObj = {
+          taskName: taskEl.getElementsByClassName("task-name")[0].textContent,
+          taskAuthor: taskEl.getElementsByClassName("task-author")[0].textContent,
+          taskDesc: taskEl.getElementsByClassName("task-desc")[0].textContent,
+          taskType: taskEl.closest(".board").classList[1]
+        };
+    taskId = taskEl.getAttribute("data-taskid");
+    isEditing = true;
+    toggleDialog(taskObj);
+  };
+  exports.fetchTask = fetchTask;
+  exports.addTask = addTask;
+  exports.toggleDialog = toggleDialog;
+  exports.editTask = editTask;
+  global.define = __define;
+  return module.exports;
 });
 
 
