@@ -21,7 +21,7 @@
     "gulp-babel": "^4.0.0",
     "gulp-concat": "^2.4.3",
     "gulp-exec": "^2.1.2",
-    "gulp-nodemon": "^2.0.6",
+    "gulp-nodemon": "^2.0.7",
     "gulp-sass": "^2.2.0",
     "gulp-watch": "^4.1.0",
     "handlebars": "^4.0.5",

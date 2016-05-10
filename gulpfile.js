@@ -5,6 +5,7 @@ var autoprefixer = require('gulp-autoprefixer');
 var babel = require('gulp-babel');
 var Server = require('karma').Server;
 var nodemon = require('gulp-nodemon');
+var exec = require('gulp-exec');
 var builder = require('systemjs-builder');
 var runSequence = require('run-sequence');
 
@@ -16,7 +17,6 @@ var builderConfig = {
   src: 'client/js/*.js',
   systemBuild: 'client/build',
   bundleName: 'main',
-//  babel: {modules: 'system'},
   bundleBuild: 'client/dist/app.js'
 };
 
@@ -32,25 +32,29 @@ gulp.task('build', () => {
     .pipe(gulp.dest(builderConfig.systemBuild));
 });
 
-gulp.task('bundle', () => {
-  builder.buildSFX(builderConfig.bundleName, builderConfig.bundleBuild, options).then(function() {
+gulp.task('bundle', ['build'], () => {
+  builder.buildSFX(builderConfig.bundleName, builderConfig.bundleBuild, options).then( () => {
     console.log('Build complete');
   })
-  .catch(function(err) {
+  .catch( (err) => {
     console.log('Build error');
     console.log(err);
   });
 });
 
-gulp.task('start', function() {
+gulp.task('start', () => {
   nodemon({
       script: 'index.js',
-      watch: ['index.js', 'client/js/*.js', 'client/scss/style.scss'],
+      env: {
+        'NODE_ENV': 'development'
+      },
       ext: 'js'
-  }).on('restart', () => {
-    gulp.run(['build', 'sass']);
-  gulp.src('index.js')
   });
+});
+
+gulp.task('compile', (done) => {
+  runSequence('build', 'bundle');
+  done();
 });
 
 gulp.task('sass', () => {
@@ -66,12 +70,12 @@ gulp.task('test', (done) => {
   }, done).start();
 });
 
-
-gulp.task('run', (callback) => {
-  runSequence('build', ['bundle'], 'sass', 'start', 'test', callback);
-});
-
-gulp.task('watch', function() {
-  gulp.watch(builderConfig.src, ['build']);
+gulp.task('watch', () => {
+  gulp.watch(builderConfig.src, ['compile']);
   gulp.watch('client/scss/*.scss'), ['sass'];
 });
+
+gulp.task('run', (callback) => {
+  runSequence('build', 'bundle', 'sass', 'watch', 'start', 'test', callback);
+});
+

@@ -14,6 +14,10 @@ let sendRequest = (req, url, params) => {
       }
     }
 
+    http.onerror = (e) => {
+      reject(e);
+    };
+    
     http.open(req, url, true);
     http.setRequestHeader('Content-type', 'application/json');
     http.send(params);

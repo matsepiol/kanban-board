@@ -13,7 +13,8 @@ getTemplate().then( (data) => { //get hbs template
     }
   });
 });
-  
+
+var a = 'hehehe';
 function getTasks() {
   let promise = new Promise( (resolve, reject) => {
     Api.getTasks( (tasks) => {
@@ -107,7 +108,7 @@ function updateTask(task) {
 
 window.toggleDialog = (taskObj) => {
  let dialog = document.getElementsByClassName('add-task-dialog')[0],
-     inputs = document.getElementsByClassName('properties')[0].getElementsByTagName('input'),
+     inputs = document.querySelector(".properties input"),
      editTitle = 'Edit Task',
      addTaskTitle = 'Add New Task';
 
@@ -122,13 +123,13 @@ window.toggleDialog = (taskObj) => {
     }
   }
 
-  let titleEl = document.getElementsByClassName('add-task-dialog')[0].getElementsByTagName('h2')[0];
+  let titleEl = document.querySelector(".add-task-dialog h2");
   //while editing
   if (taskObj) {
     let {taskName, taskAuthor, taskDesc, taskType} = taskObj;
-    document.getElementsByClassName('name-input')[0].getElementsByTagName('input')[0].value = taskName;
-    document.getElementsByClassName('author-input')[0].getElementsByTagName('input')[0].value = taskAuthor;
-    document.getElementsByClassName('description-input')[0].getElementsByTagName('input')[0].value = taskDesc;
+    document.querySelector(".name-input input").value = taskName;
+    document.querySelector(".author-input input").value = taskAuthor;
+    document.querySelector(".description-input input").value = taskDesc;
     document.getElementById(taskType).checked = true;
     titleEl.innerHTML = editTitle;
   }
@@ -139,10 +140,10 @@ window.toggleDialog = (taskObj) => {
 };
 
 window.getNewTaskOptions = () => {
-  let taskName = document.getElementsByClassName('name-input')[0].getElementsByTagName('input')[0].value,
-      taskAuthor = document.getElementsByClassName('author-input')[0].getElementsByTagName('input')[0].value,
-      taskDesc = document.getElementsByClassName('description-input')[0].getElementsByTagName('input')[0].value,
-      typeCheckbox = document.getElementsByClassName('task-type-form')[0].getElementsByTagName('input'),
+  let taskName = ocument.querySelector(".name-input input").value,
+      taskAuthor = document.querySelector(".author-input input").value,
+      taskDesc = document.querySelector(".description-input input").value,
+      typeCheckbox = document.querySelector(".task-type-form input"),
       taskType;
 
   for (let i = 0 ; i < typeCheckbox.length ; i++) {
@@ -195,5 +196,6 @@ window.showEditDialog = (obj) => {
   isEditing = true;
   toggleDialog(taskObj);
 };
-
+module.exports = showEditDialog;
 export {fetchTask, addTask, toggleDialog, editTask};
+
