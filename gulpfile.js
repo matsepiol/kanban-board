@@ -5,7 +5,6 @@ var autoprefixer = require('gulp-autoprefixer');
 var babel = require('gulp-babel');
 var Server = require('karma').Server;
 var nodemon = require('gulp-nodemon');
-var exec = require('gulp-exec');
 var builder = require('systemjs-builder');
 var runSequence = require('run-sequence');
 
@@ -26,17 +25,18 @@ var options = {
   }
 };
 
-gulp.task('build', () => {
+gulp.task('build', function () { console.log(1);
   return gulp.src(builderConfig.src)
-    .pipe(babel(builderConfig.babel))
+    .pipe(babel())
     .pipe(gulp.dest(builderConfig.systemBuild));
 });
 
-gulp.task('bundle', ['build'], () => {
-  builder.buildSFX(builderConfig.bundleName, builderConfig.bundleBuild, options).then( () => {
+gulp.task('bundle', function () {
+  console.log(2);
+  builder.buildSFX(builderConfig.bundleName, builderConfig.bundleBuild, options).then( function() {
     console.log('Build complete');
   })
-  .catch( (err) => {
+  .catch( function(err) {
     console.log('Build error');
     console.log(err);
   });
@@ -52,9 +52,8 @@ gulp.task('start', () => {
   });
 });
 
-gulp.task('compile', (done) => {
-  runSequence('build', 'bundle');
-  done();
+gulp.task('compile', function(callback) {
+  runSequence('build', ['bundle'], callback);
 });
 
 gulp.task('sass', () => {
@@ -70,12 +69,12 @@ gulp.task('test', (done) => {
   }, done).start();
 });
 
-gulp.task('watch', () => {
+gulp.task('watch', function() {
   gulp.watch(builderConfig.src, ['compile']);
-  gulp.watch('client/scss/*.scss'), ['sass'];
+  gulp.watch('client/scss/*.scss', ['sass']);
 });
 
 gulp.task('run', (callback) => {
-  runSequence('build', 'bundle', 'sass', 'watch', 'start', 'test', callback);
+  runSequence('compile', 'start', 'watch', 'test', callback);
 });
 

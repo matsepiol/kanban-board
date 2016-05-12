@@ -17,7 +17,7 @@ module.exports = function(config) {
     reporters: ['progress'],
     browsers: ['Firefox'],
     colors: true,
-    autoWatch: false,
+    autoWatch: true,
     singleRun: false
   });
 };
