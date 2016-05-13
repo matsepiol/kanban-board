@@ -1,62 +1,67 @@
-let baseDomain = 'http://localhost:3000/',
-    http = new XMLHttpRequest();
+export default class Api {
 
-let sendRequest = (req, url, params) => {
-  let promise = new Promise( (resolve, reject) => {
+  constructor() {
+    this.baseDomain = 'http://localhost:3000/',
+    this.http = new XMLHttpRequest();
 
-    if (params) {
-      params = JSON.stringify(params);
-    }
+    this.sendRequest = (req, url, params) => {
+      let promise = new Promise( (resolve, reject) => {
 
-    http.onreadystatechange = () => {
-      if (http.readyState === 4 && http.status === 200) {
-        resolve(http.responseText);
-      }
-    }
+        if (params) {
+          params = JSON.stringify(params);
+        }
 
-    http.onerror = (e) => {
-      reject(e);
+        this.http.onreadystatechange = () => {
+          if (this.http.readyState === 4 && this.http.status === 200) {
+            resolve(this.http.responseText);
+          }
+        }
+
+        this.http.onerror = (e) => {
+          reject(e);
+        };
+        
+        this.http.open(req, url, true);
+        this.http.setRequestHeader('Content-type', 'application/json');
+        this.http.send(params);
+      });
+
+      return promise;
     };
-    
-    http.open(req, url, true);
-    http.setRequestHeader('Content-type', 'application/json');
-    http.send(params);
-  });
+  }
 
-  return promise;
-};
+  getTasks(callback) {
+    let url = this.baseDomain + 'api/tasks';
+    this.sendRequest('GET', url).then( (data) => {
+      callback(data);
+    });
+  }
 
-export function getTasks(callback) {
-  let url = baseDomain + 'api/tasks';
-  sendRequest('GET', url).then( (data) => {
-    callback(data);
-  });
-};
+  getTaskById(taskId, callback) {
+    let url = this.baseDomain + 'api/tasks/' + taskId;
+    this.sendRequest('GET', url).then( (data) => {
+      callback(data);
+    });
+  }
 
-export function getTaskById(taskId, callback) {
-  let url = baseDomain + 'api/tasks/' + taskId;
-  sendRequest('GET', url).then( (data) => {
-    callback(data);
-  });
-};
+  addTask(task, callback) {
+    let url = this.baseDomain + 'api/tasks';
+    this.sendRequest('POST', url, task).then( (data) => {
+      callback(data);
+    });
+  }
 
-export function addTask(task, callback) {
-  let url = baseDomain + 'api/tasks';
-  sendRequest('POST', url, task).then( (data) => {
-    callback(data);
-  });
-};
+  editTask(taskId, task, options, callback) {
+    let url = this.baseDomain + 'api/tasks/' + taskId;
+    this.sendRequest('PUT', url, task).then( (data) => {
+      callback(data);
+    });
+  }
 
-export function editTask(taskId, task, options, callback) {
-  let url = baseDomain + 'api/tasks/' + taskId;
-  sendRequest('PUT', url, task).then( (data) => {
-    callback(data);
-  });
-};
-
-export function deleteTask(taskId, callback) {
-  let url = baseDomain + 'api/tasks/' + taskId;
-  sendRequest('DELETE', url).then( (data) => {
-    callback(data);
-  });
-};
+  deleteTask(taskId, callback) {
+    let url = this.baseDomain + 'api/tasks/' + taskId;
+    this.sendRequest('DELETE', url).then( (data) => {
+      callback(data);
+    });
+  }
+}

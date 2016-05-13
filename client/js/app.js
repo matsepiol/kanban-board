@@ -1,4 +1,4 @@
-import * as Api from './api';
+import Api from './api';
 import Task from './task';
 
 export default class App {
@@ -7,14 +7,12 @@ export default class App {
     let taskId;
     let isEditing = false;
 
-    this.tasks = [];
     this.getTemplate().then( (data) => { //get hbs template
-      this.taskTpl = Handlebars.compile(data);
+      window.taskTpl = Handlebars.compile(data);
       this.getTasks().then( (tasks) => { //get tasks from API
         for (let i = 0 ; i < tasks.length ; i++) {
-          let task = new Task(tasks[i]);
-          this.tasks.push(task);
-          this.fetchTask(task);
+          let task = new Task(tasks[i], taskTpl);
+          task.fetchTask(task);
         }
       });
     });
@@ -43,34 +41,12 @@ export default class App {
 
   getTasks() {
     let promise = new Promise( (resolve, reject) => {
-      Api.getTasks( (tasks) => {
+      let api = new Api();
+      api.getTasks( (tasks) => {
         resolve(JSON.parse(tasks));
       });
     });
     return promise;
-  }
-
-  fetchTask(task) {
-    let typeSection = document.getElementsByClassName(task.type)[0],
-        errMsg = 'Required fields are missing.',
-        okMsg = 'Everything went fine!';
-
-    if (!task.name || !task.author || !task.type) {
-      return errMsg;
-    }
-    else {
-      if (!typeSection) return;
-
-      let taskHtml = this.taskTpl(task),
-          currentTask = document.createElement('div');
-      
-      currentTask.setAttribute('data-taskid', task.id);
-      currentTask.classList.add('task');
-      currentTask.innerHTML = taskHtml;
-
-      typeSection.appendChild(currentTask);
-      return okMsg;
-    }
   }
 
   toggleDialog(taskObj) {
@@ -81,6 +57,7 @@ export default class App {
 
    if (dialog.classList.contains('hidden')) {
       dialog.classList.remove('hidden');
+      if (taskObj) taskId = taskObj.id;
    }
    else {
       dialog.classList.add('hidden');
@@ -93,46 +70,23 @@ export default class App {
     let titleEl = document.querySelector(".add-task-dialog h2");
     //while editing
     if (taskObj) {
-      let {taskName, taskAuthor, taskDesc, taskType} = taskObj;
-      document.querySelector(".name-input input").value = taskName;
-      document.querySelector(".author-input input").value = taskAuthor;
-      document.querySelector(".description-input input").value = taskDesc;
-      document.getElementById(taskType).checked = true;
+      let {name, author, description, type} = taskObj;
+      document.querySelector(".name-input input").value = name;
+      document.querySelector(".author-input input").value = author;
+      document.querySelector(".description-input input").value = description;
+      document.getElementById(type).checked = true;
       titleEl.innerHTML = editTitle;
+      isEditing = true;
     }
     //while creating new task
     else {
       titleEl.innerHTML = addTaskTitle;
+      isEditing = false;
     }
   };
 
-  showEditDialog(obj) {
-    let taskEl = obj.parentElement,
-        taskObj = {
-          taskName: taskEl.getElementsByClassName('task-name')[0].textContent,
-          taskAuthor: taskEl.getElementsByClassName('task-author')[0].textContent,
-          taskDesc: taskEl.getElementsByClassName('task-desc')[0].textContent,
-          taskType: taskEl.closest('.board').classList[1]
-        }
-
-    this.taskId = taskEl.getAttribute('data-taskid');
-    this.isEditing = true;
-    toggleDialog(taskObj);
-  };
-
-  deleteTask(obj) {
-    let taskEl = obj.parentElement,
-        taskId = taskEl.getAttribute('data-taskid');
-
-    let promise = new Promise( (resolve, reject) => {
-      Api.deleteTask(taskId, (task) => {
-        taskEl.parentElement.removeChild(taskEl);  
-        return 'Task succesfully deleted.';
-      });
-    });
-  };
-
   getNewTaskOptions() {
+
     let taskName = document.querySelector('.name-input input').value,
         taskAuthor = document.querySelector('.author-input input').value,
         taskDesc = document.querySelector('.description-input input').value,
@@ -156,7 +110,7 @@ export default class App {
       description: taskDesc
     };
 
-    let task = new Task(taskObject);
+    let task = new Task(taskObject, taskTpl);
 
     if (isEditing) {
       let taskEl = document.querySelectorAll('[data-taskid="' + this.taskId + '"]')[0],
@@ -164,15 +118,21 @@ export default class App {
 
       task.editTask(this.taskId, taskObject); 
 
-      if (formerType !== task.type) {
-        taskEl.parentElement.removeChild(taskEl);  
-        this.fetchTask(task); 
+      if (formerType !== taskObject.type) {
+        taskEl.parentElement.removeChild(taskEl);
+        task.fetchTask(task); 
+      }
+      else {
+        taskEl.getElementsByClassName('task-name')[0].textContent = taskObject.name;
+        taskEl.getElementsByClassName('task-author')[0].textContent = taskObject.author;
+        taskEl.getElementsByClassName('task-desc')[0].textContent = taskObject.description;
       }
 
       this.isEditing = false;
     }
     else {
       task.addTask(taskObject);
+      task.fetchTask(task);
     }
   };
 
