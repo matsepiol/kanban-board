@@ -4,48 +4,25 @@ import Task from './task';
 export default class App {
 
   constructor() {
-    let taskId;
-    let isEditing = false;
+    let taskId,
+        isEditing = false;
 
-    this.getTemplate().then( (data) => { //get hbs template
-      window.taskTpl = Handlebars.compile(data);
-      this.getTasks().then( (tasks) => { //get tasks from API
-        for (let i = 0 ; i < tasks.length ; i++) {
-          let task = new Task(tasks[i], taskTpl);
-          task.fetchTask(task);
-        }
-      });
+    this.getTasks().then( tasks => { //get tasks from API
+      for (let i = 0 ; i < tasks.length ; i++) {
+        let task = new Task(tasks[i]);
+        task.fetchTask(task);
+      }
     });
-  }
-
-  getTemplate() {
-    let promise = new Promise( (resolve, reject) => {
-      let http = new XMLHttpRequest();
-
-      http.open('GET', '../handlebars/taskTpl.hbs', true);
-      http.send(null);
-
-      http.onreadystatechange = () => {
-        if (http.readyState === 4 && http.status === 200) {
-          resolve(http.responseText);
-        }
-      };
-
-      http.onerror = (e) => {
-        reject(e);
-      };
-    });
-
-    return promise;
   }
 
   getTasks() {
     let promise = new Promise( (resolve, reject) => {
       let api = new Api();
-      api.getTasks( (tasks) => {
+      api.getTasks( tasks => {
         resolve(JSON.parse(tasks));
       });
     });
+
     return promise;
   }
 
@@ -57,7 +34,7 @@ export default class App {
 
    if (dialog.classList.contains('hidden')) {
       dialog.classList.remove('hidden');
-      if (taskObj) taskId = taskObj.id;
+      if (taskObj) taskId = taskObj._id;
    }
    else {
       dialog.classList.add('hidden');
@@ -110,7 +87,7 @@ export default class App {
       description: taskDesc
     };
 
-    let task = new Task(taskObject, taskTpl);
+    let task = new Task(taskObject);
 
     if (isEditing) {
       let taskEl = document.querySelectorAll('[data-taskid="' + this.taskId + '"]')[0],
@@ -132,7 +109,6 @@ export default class App {
     }
     else {
       task.addTask(taskObject);
-      task.fetchTask(task);
     }
   };
 

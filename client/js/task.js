@@ -1,26 +1,27 @@
 import Api from './api';
+import dragDropHelper from './dragDropHelper';
 
 export default class Task {
 
-  constructor(task, taskTpl) {
+  constructor(task) {
     this.api = Api;
     this.name = task.name;
     this.author = task.author;
     this.description = task.description;
     this.type = task.type;
-    this.id = task._id;
-    this.taskTpl = taskTpl;
+    this._id = task._id;
   }
 
   addTask(options) {
     let promise = new Promise( (resolve, reject) => {
       let api = new Api();
-      api.addTask(options, (task) => {
-        //this.fetchTask(JSON.parse(task));
-        return 'Task succesfully added.';
+      api.addTask(options, task => {
+        toggleDialog();
+        this.fetchTask(JSON.parse(task));
+        this._id = JSON.parse(task)._id;
+        console.log('Task succesfully added');
       });
     });
-    toggleDialog();
   }
 
   fetchTask(task) {
@@ -34,15 +35,23 @@ export default class Task {
     else {
       if (!typeSection) return;
 
-      let taskHtml = task.taskTpl(task),
-          currentTaskEl = document.createElement('div');
+      let taskHtml = taskTpl(task),
+          tempEl = document.createElement('div'),
+          currentTaskEl;
       
-      currentTaskEl.setAttribute('data-taskid', task.id);
-      currentTaskEl.classList.add('task');
-      currentTaskEl.innerHTML = taskHtml;
+      tempEl.innerHTML = taskHtml;
+      currentTaskEl = tempEl.firstChild;
 
       typeSection.appendChild(currentTaskEl);
       this.appendEventsToTask(currentTaskEl);
+
+      let dragHelper = new dragDropHelper();
+      currentTaskEl.addEventListener('dragstart', dragHelper.handleDragStart, false);
+      currentTaskEl.addEventListener('dragenter', dragHelper.handleDragEnter, false);
+      currentTaskEl.addEventListener('dragover', dragHelper.handleDragOver, false);
+      currentTaskEl.addEventListener('dragleave', dragHelper.handleDragLeave, false);
+      currentTaskEl.addEventListener('drop', dragHelper.handleDrop, false);
+
       return okMsg;
     }
   }
@@ -57,21 +66,22 @@ export default class Task {
   }
 
   editTask(taskId, taskObj) {
+    this._id = taskId;
     let promise = new Promise( (resolve, reject) => {
       let api = new Api();
-      api.editTask(taskId, taskObj, {}, (task) => {
-        //this.updateTask(JSON.parse(task));
+      api.editTask(taskId, taskObj, {}, task => {
+        toggleDialog();
+        console.log('Task succesfully edited');
       });
     });
-    toggleDialog();
   }
 
   deleteTask(task) {
-    let taskEl = document.querySelectorAll('[data-taskid="' + task.id + '"]')[0];
+    let taskEl = document.querySelectorAll('[data-taskid="' + task._id + '"]')[0];
 
     let promise = new Promise( (resolve, reject) => {
       let api = new task.api();
-      api.deleteTask(task.id, (task) => {
+      api.deleteTask(task._id, task => {
         taskEl.parentElement.removeChild(taskEl);  
         console.log('Task succesfully deleted.');
       });

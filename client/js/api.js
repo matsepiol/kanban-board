@@ -17,7 +17,7 @@ export default class Api {
           }
         }
 
-        this.http.onerror = (e) => {
+        this.http.onerror = e => {
           reject(e);
         };
         
@@ -32,35 +32,35 @@ export default class Api {
 
   getTasks(callback) {
     let url = this.baseDomain + 'api/tasks';
-    this.sendRequest('GET', url).then( (data) => {
+    this.sendRequest('GET', url).then( data => {
       callback(data);
     });
   }
 
   getTaskById(taskId, callback) {
     let url = this.baseDomain + 'api/tasks/' + taskId;
-    this.sendRequest('GET', url).then( (data) => {
+    this.sendRequest('GET', url).then( data => {
       callback(data);
     });
   }
 
   addTask(task, callback) {
     let url = this.baseDomain + 'api/tasks';
-    this.sendRequest('POST', url, task).then( (data) => {
+    this.sendRequest('POST', url, task).then( data => {
       callback(data);
     });
   }
 
   editTask(taskId, task, options, callback) {
     let url = this.baseDomain + 'api/tasks/' + taskId;
-    this.sendRequest('PUT', url, task).then( (data) => {
+    this.sendRequest('PUT', url, task).then( data => {
       callback(data);
     });
   }
 
   deleteTask(taskId, callback) {
     let url = this.baseDomain + 'api/tasks/' + taskId;
-    this.sendRequest('DELETE', url).then( (data) => {
+    this.sendRequest('DELETE', url).then( data => {
       callback(data);
     });
   }

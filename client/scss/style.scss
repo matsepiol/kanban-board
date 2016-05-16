@@ -1,7 +1,8 @@
 @import "/scss/fontello.css";
 
-$grey: #d2e4d2;
+$grey: #d3d3d3;
 $blue: #007da1;
+$light-yellow: #ffffe0;
 
 @font-face {
   font-family: "fontello";
@@ -15,6 +16,10 @@ $blue: #007da1;
   font-style: normal;
 }
 
+[draggable] {
+  //user-select: none;
+}
+
 .kanban-board {
   display: inline-block;
   height: 95vh;
@@ -24,10 +29,14 @@ $blue: #007da1;
     background-color: $grey;
     border: 1px solid #000;
     height: 100%;
-    width: 30%;
+    width: 29%;
     float: left;
     margin: 0 10px;
     overflow: auto;
+
+    .task.dragged {
+      border: 2px dashed #000;
+    }
 
     .task {
       position: relative;
@@ -37,6 +46,8 @@ $blue: #007da1;
       float: left;
       margin: 10px;
       padding: 10px;
+      background-color: $light-yellow;
+      cursor: move;
 
       .task-info {
         float: left;
@@ -52,6 +63,8 @@ $blue: #007da1;
         display: block;
         float: right;
         margin: 10px;
+        font-size: 14px;
+        padding: 0;
       }
     }
 
@@ -110,8 +123,9 @@ $blue: #007da1;
   .submit-button,
   .cancel-button {
     cursor: pointer;
-    margin: 20px;
-    font-size: 20px;
+    padding: 15px 32px;
+    font-size: 13px;
+    margin: 0px 20px;
     border-radius: 4px;
     border: 1px solid $blue;
     background-color: $blue;
@@ -123,4 +137,22 @@ $blue: #007da1;
   .submit-button {
     float: right;
   }
+}
+
+.button {
+  background-color: #000;
+  border: 2px solid #000;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 13px;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  transition-duration: 0.4s;
+}
+
+.button:hover {
+  background-color: #fff;
+  color: #000;
 }
