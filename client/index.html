@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Kanban Board</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+    <link rel="stylesheet" href="style.css">
+    <script src="node_modules/handlebars/dist/handlebars.js"></script>
+    <script src="dist/app.js"></script>
+  </head>
+
+  <body>
+
+    <div class="kanban-board">
+      <section class="board to-do" draggable="true">
+        <h2>To Do</h2>
+      </section>
+
+      <section class="board in-progress" draggable="true">
+        <h2>In Progress</h2>
+      </section>
+
+      <section class="board done" draggable="true">
+        <h2>Done</h2>
+      </section>
+    </div>
+
+    <div class='button-wrapper'>
+      <button class="button" type="button" onclick="toggleDialog();">Add task</button>
+    </div>
+
+    <div class="add-task-dialog hidden">
+      <h2></h2>
+      <div class='new-task-options'>
+        <div class='properties'>
+          <span class="name-input">
+            Name:
+            <input type="text" name="name"></input>
+          </span>
+          <span class="author-input">
+            Author:
+            <input type="text" name="author"></input>
+          </span>
+          <span class="description-input">
+            Description:
+            <input type="text" name="description"></input>
+          </span>
+        </div>
+
+        <form class="task-type-form">
+          Type:
+          <input id="to-do" type="radio" name="task-type" value="to-do" checked>
+          <label for="to-do"><span><span></span></span>To Do</label>
+          <input id="in-progress" type="radio" name="task-type" value="in-progress">
+          <label for="in-progress"><span><span></span></span>In Progress</label>
+          <input id="done" type="radio" name="task-type" value="done">
+          <label for="done"><span><span></span></span>Done</label>
+        </form>
+
+      </div>
+
+      <button class="cancel-button" type="button" onclick="toggleDialog();">Cancel</button>
+      <button class="submit-button" type="button" onclick="getNewTaskOptions();">Submit</button>
+
+    </div>
+
+  </body>
+
+</html>

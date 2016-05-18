@@ -1,0 +1,170 @@
+@import "/scss/fontello.css";
+
+$grey: #d3d3d3;
+$blue: #007da1;
+$light-yellow: #ffffe0;
+
+@font-face {
+  font-family: "fontello";
+  src: url("/font/fontello.eot?78424500");
+  src: url("/font/fontello.eot?78424500#iefix") format("embedded-opentype"),
+       url("/font/fontello.woff2?78424500") format("woff2"),
+       url("/font/fontello.woff?78424500") format("woff"),
+       url("/font/fontello.ttf?78424500") format("truetype"),
+       url("/font/fontello.svg?78424500#fontello") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+//for Safari
+[draggable=true] {
+  -khtml-user-drag: element;
+  user-select: none;
+}
+
+.kanban-board {
+  display: inline-block;
+  height: 95vh;
+  width: 100%;
+
+  .board {
+    background-color: $grey;
+    border: 1px solid #000;
+    height: 100%;
+    width: 30%;
+    float: left;
+    margin: 0 10px;
+    overflow: auto;
+
+    &.dragged {
+      border: 2px dashed #000;
+
+      * {
+        pointer-events: none;
+      } 
+    }
+
+    .task {
+      position: relative;
+      border: 1px solid #000;
+      overflow: auto;
+      width: 140px;
+      float: left;
+      margin: 10px;
+      padding: 10px;
+      background-color: $light-yellow;
+      cursor: move;
+      
+      .task-info {
+        float: left;
+        width: 100%;
+      }
+
+      .icon-cancel {
+        cursor: pointer;
+        float: right;
+      }
+
+      .edit-task {
+        display: block;
+        float: right;
+        margin: 10px;
+        font-size: 14px;
+        padding: 0;
+        cursor: pointer;
+      }
+    }
+
+    h2 {
+      text-align: center;
+      border-bottom: 1px solid #000;
+    }
+  }
+}
+
+.button-wrapper {
+  .button {
+    position: fixed;
+    left: 93%;
+    top: 5%;
+  }
+}
+
+.add-task-dialog {
+  width: 480px;
+  height: 540px;
+  position: absolute;
+  top: 15%;
+  background-color: white;
+  left: 32%;
+  border: 1px solid $blue;
+
+  &.hidden {
+    display: none;
+  }
+
+  .new-task-options {
+    padding: 20px;
+  }
+
+  h2 {
+    background-color: $blue;
+    text-align: center;
+    color: #fff;
+    margin: 0px;
+    padding: 20px 0;
+  }
+
+  span {
+    float: left;
+    width: 100%;
+    margin: 20px 0;
+  }
+
+  .properties 
+    display: inline-block;
+    margin-bottom: 10px;
+
+    input {
+      float: right;
+      margin-right: 30%;
+      width: 180px;
+    }
+  }
+
+  .submit-button,
+  .cancel-button {
+    cursor: pointer;
+    padding: 15px 32px;
+    font-size: 13px;
+    margin: 0px 20px;
+    border-radius: 4px;
+    border: 1px solid $blue;
+    background-color: $blue;
+    color: #fff;
+    position: relative;
+    bottom: 12%;
+  }
+
+  .submit-button {
+    float: right;
+  }
+}
+
+.button {
+  background-color: #000;
+  border: 2px solid #000;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 13px;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  transition-duration: 0.4s;
+}
+
+.button:hover {
+  background-color: #fff;
+  color: #000;
+}
