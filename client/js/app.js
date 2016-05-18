@@ -1,5 +1,6 @@
 import Api from './api';
 import Task from './task';
+import dragDropHelper from './dragDropHelper';
 
 export default class App {
 
@@ -12,6 +13,7 @@ export default class App {
         let task = new Task(tasks[i]);
         task.fetchTask(task);
       }
+      this.handleDragEvents();
     });
   }
 
@@ -62,6 +64,23 @@ export default class App {
     }
   };
 
+  handleDragEvents() {
+    let dragHelper = new dragDropHelper(),
+        boardsEl = document.getElementsByClassName('board'),
+        tasksEl = document.getElementsByClassName('task');
+
+    [].forEach.call(tasksEl, task => {
+      task.addEventListener('dragstart', dragHelper.handleDragStart, false);
+    });
+
+    [].forEach.call(boardsEl, board => {
+      board.addEventListener('dragenter', dragHelper.handleDragEnter, false);
+      board.addEventListener('dragover', dragHelper.handleDragOver, false);
+      board.addEventListener('dragleave', dragHelper.handleDragLeave, false);
+      board.addEventListener('dragend', dragHelper.handleDragEnd, false);
+    });
+  }
+
   getNewTaskOptions() {
 
     let taskName = document.querySelector('.name-input input').value,
@@ -75,7 +94,6 @@ export default class App {
         taskType = typeCheckbox[i].value;
       }
     }
-
     //all fields must be filled
     // TODO - visible alert that you haven't filled all inputs
     if (!taskName || !taskAuthor || !taskDesc) return;

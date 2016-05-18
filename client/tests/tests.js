@@ -1,8 +1,7 @@
 import * as Main from '../js/main';
+import Task from '../js/task';
 
 describe('Unit tests:', () => {
-  let tasks = {},
-      hehe;
 
   beforeEach( () => {
   });
@@ -13,13 +12,16 @@ describe('Unit tests:', () => {
   });
 
   it('Test if tasks has all the required fields', () => {
-    let exampleTask = {
-      name: 'test',
-      author: 'test1',
-      type: ''
+    let taskObject = {
+      name: 'test test',
+      author: 'Mateusz Sepiol',
+      type: '',
+      description: 'test decs'
     };
 
-    let result = Main.fetchTask(exampleTask);
+    let task = new Task(taskObject);
+
+    let result = task.fetchTask(task);
     expect(result).toBe('Required fields are missing.');
   });
 
@@ -31,22 +33,27 @@ describe('Unit tests:', () => {
       description: 'test decs'
     };
 
-    spyOn(Main, 'fetchTask').and.returnValue('Everything is fine');
-    let result = Main.fetchTask(correctTask);
+    let task = new Task(correctTask);
+
+    spyOn(task, 'fetchTask').and.returnValue('Everything is fine');
+
+    let result = task.fetchTask(correctTask);
     expect(result).toBe('Everything is fine');
   });
 
   it('Test if toggling dialog works after adding task', () => {
-    let task = {
+    let correctTask = {
       name: 'correct test',
       author: 'Mateusz Sepiol',
       type: 'to-do',
       description: 'test decs'
     };
 
-    spyOn(window, 'toggleDialog');
-    Main.addTask(task);
-    expect(window.toggleDialog).toHaveBeenCalled();
+    let task = new Task(correctTask);
+
+    spyOn(task, 'fetchTask');
+    task.addTask(task);
+    expect(task.fetchTask).toHaveBeenCalled();
   });
 
   it('Test if toggling dialog works after editing task', () => {
@@ -57,9 +64,9 @@ describe('Unit tests:', () => {
       description: 'test decs'
     };
 
-    spyOn(window, 'toggleDialog');
-    Main.editTask(task);
-    expect(window.toggleDialog).toHaveBeenCalled();
+    spyOn(window, 'handleDragEvents');
+    task.editTask(task);
+    expect(window.handleDragEvents).toHaveBeenCalled();
   });
 
 });

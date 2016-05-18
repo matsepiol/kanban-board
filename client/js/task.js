@@ -1,5 +1,4 @@
 import Api from './api';
-import dragDropHelper from './dragDropHelper';
 
 export default class Task {
 
@@ -44,13 +43,7 @@ export default class Task {
 
       typeSection.appendChild(currentTaskEl);
       this.appendEventsToTask(currentTaskEl);
-
-      let dragHelper = new dragDropHelper();
-      currentTaskEl.addEventListener('dragstart', dragHelper.handleDragStart, false);
-      currentTaskEl.addEventListener('dragenter', dragHelper.handleDragEnter, false);
-      currentTaskEl.addEventListener('dragover', dragHelper.handleDragOver, false);
-      currentTaskEl.addEventListener('dragleave', dragHelper.handleDragLeave, false);
-      currentTaskEl.addEventListener('drop', dragHelper.handleDrop, false);
+      window.handleDragEvents();
 
       return okMsg;
     }
@@ -70,7 +63,7 @@ export default class Task {
     let promise = new Promise( (resolve, reject) => {
       let api = new Api();
       api.editTask(taskId, taskObj, {}, task => {
-        toggleDialog();
+        document.getElementsByClassName('add-task-dialog')[0].classList.add('hidden');
         console.log('Task succesfully edited');
       });
     });

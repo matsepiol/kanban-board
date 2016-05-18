@@ -2,14 +2,6 @@
 
 import App from './app';
 
-// experiment - to be addressed 
-
-/*Handlebars.registerHelper('func', function(fn, context) {
-  let contextStr = JSON.stringify(context).replace(/"/g, "'");
-     return new Handlebars.SafeString("(" + 
-                fn.toString().replace(/\"/g,"'") + ")(" + contextStr + ")");
-});*/
-
 let taskTpl;
 
 function getTemplate() {
@@ -41,4 +33,5 @@ getTemplate().then( data => {
   
   window.toggleDialog = app.toggleDialog;
   window.getNewTaskOptions = app.getNewTaskOptions;
+  window.handleDragEvents = app.handleDragEvents;
 });
